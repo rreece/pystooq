@@ -22,7 +22,6 @@ class StooqDataFetcher:
         df.columns = [el.lower() for el in df.columns]
         df["date"] = [datetime.strptime(el, "%Y-%m-%d").date() for el in df["date"]]
         df.set_index(inplace=True, keys=["date"])
-#        df.columns = pd.MultiIndex.from_product([[ticker], list(df.columns)], names=["ticker", "variable"])
         return df
 
     def get_data(
@@ -43,12 +42,10 @@ class StooqDataFetcher:
         for ticker_, data_ in data.items():
             if data_ is None:
                 no_data.append(ticker_)
-        logger.warning(f"No data has been fetched for the following tickers: {', '.join(no_data)}")
+        if no_data:
+            logger.warning(f"No data has been fetched for the following tickers: {', '.join(no_data)}")
         for ticker in no_data:
             data.pop(ticker)
 
-#        data = reduce(
-#            lambda left, right: pd.merge(left, right, left_index=True, right_index=True, how="outer"), data.values()
-#        )
         return data
 
