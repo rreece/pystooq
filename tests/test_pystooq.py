@@ -7,6 +7,7 @@ from datetime import date
 
 from pystooq.load import get_ticker_df
 from pystooq.load import get_stooq_ticker
+from pystooq.save import save_tickers
 from pystooq.stooq_data_fetcher import StooqDataFetcher
 
 

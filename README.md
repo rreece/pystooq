@@ -15,7 +15,7 @@ Stooq in any way.
 Add the latest commit to your `requirements.txt`
 
 ```
-pystooq @ git+https://github.com/rreece/pystooq@1d879130f3f70d0e7f22d34216a4a4cb3a29f0a3
+pystooq @ git+https://github.com/rreece/pystooq@9e8c1b6601226ab49cebcd64687d53aa9f8618e1
 ```
 
 
