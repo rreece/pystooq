@@ -9,27 +9,27 @@ daily time series stock ticker data from [Stooq](https://stooq.com) website.
 Please note that the authors of this package are not affiliated with 
 Stooq in any way.
 
+## Installation
+
+Add the latest commit to your `requirements.txt`
+
+```
+pystooq @ git+https://github.com/rreece/pystooq@5a3848bb26dcbe57c753e39482220e9f72d57f69
+```
 
 ## Usage
 
-In order to download Stooq time series of prices for tickers 
-`VOO` and `GLD` for a specified time period:
+In order to download Stooq time series of prices for tickers,
+saving the data to csv files so that it doesn't  downloaded if you try
+to load it again, you can just
 
-```python
-from pystooq.stooq_data_fetcher import StooqDataFetcher
-
-tickers = ["VOO", "GLD"]
-stooq_tickers = [ get_stooq_ticker(_t) for _t in tickers ]
-fetcher = StooqDataFetcher()
-dfs = fetcher.get_data(
-    tickers=stooq_tickers,
-    start=date.fromisoformat("2022-01-01"),
-    end=date.fromisoformat("2022-01-31"),
-)
+```
+from pystooq.load import get_ticker_df
+date_range = ("2022-01-01", "2022-01-31")
+df = get_ticker_df("VOO", date_range)
 ```
 
-Will return of list of dataframes, one for each ticker requested.
-Each dataframe will look like this:
+The dataframe will look like this:
 
 ```
                 open     high      low    close        volume
@@ -55,4 +55,26 @@ date
 2022-01-28  380.068  388.207  375.755  388.140  1.266167e+07
 2022-01-31  387.574  395.501  386.308  395.232  9.630049e+06
 ```
+
+
+## Basic usage
+
+In order to download Stooq time series of prices for tickers 
+`VOO` and `GLD` for a specified time period:
+
+```python
+from pystooq.stooq_data_fetcher import StooqDataFetcher
+
+tickers = ["VOO", "GLD"]
+stooq_tickers = [ get_stooq_ticker(_t) for _t in tickers ]
+fetcher = StooqDataFetcher()
+dfs = fetcher.get_data(
+    tickers=stooq_tickers,
+    start=date.fromisoformat("2022-01-01"),
+    end=date.fromisoformat("2022-01-31"),
+)
+```
+
+This returns a dataframe like above.
+This does _not_ save the data in csv files.
 
