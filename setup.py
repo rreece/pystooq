@@ -6,11 +6,11 @@ import pathlib
 
 setup(
     name="pystooq",
-    version="1.0.3",
+    version="2.0.0",
     description="Package for fetching of data from Stooq.com",
     long_description=(pathlib.Path(__file__).parent / "README.md").read_text(),
     long_description_content_type='text/markdown',
-    author="Artur Wegrzyn",
+    author="Artur Wegrzyn, Ryan Reece",
     packages=find_packages(),
     install_requires=[
         "coloredlogs>=15.0.1",

@@ -1,1 +1,0 @@
-from .stooq_data_fetcher import StooqDataFetcher
