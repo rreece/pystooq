@@ -13,8 +13,6 @@ setup(
     author="Artur Wegrzyn, Ryan Reece",
     packages=find_packages(),
     install_requires=[
-        "coloredlogs>=15.0.1",
-        "humanfriendly>=10.0",
         "numpy>=1.23.0",
         "pandas>=2.0.3",
         "python-dateutil>=2.8.2",
