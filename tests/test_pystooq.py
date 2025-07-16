@@ -10,9 +10,9 @@ from pystooq.stooq_data_fetcher import StooqDataFetcher
 
 
 def test_fetcher():
-    tickers = ["VOO", "TSLA"]
-    fetcher = StooqDataFetcher()
+    tickers = ["VOO", "GLD"]
     stooq_tickers = [ get_stooq_ticker(_t) for _t in tickers ]
+    fetcher = StooqDataFetcher()
     dfs = fetcher.get_data(
         tickers=stooq_tickers,
         start=date.fromisoformat("2022-01-01"),
