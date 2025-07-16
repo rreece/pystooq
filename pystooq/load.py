@@ -7,6 +7,8 @@ import numpy as np
 import os
 import pandas as pd
 
+from pystooq.save import save_tickers
+
 
 PYSTOOQ_DATA_DIR = os.path.join(
         os.environ.get("PYSTOOQ_DATA_DIR", os.environ.get("HOME", "~/")),
