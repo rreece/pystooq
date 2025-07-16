@@ -11,8 +11,10 @@ from pystooq.stooq_data_fetcher import StooqDataFetcher
 
 
 def test_get_ticker_df():
+    ticker = "VOO"
     date_range = ("2022-01-01", "2022-01-31")
-    df = get_ticker_df("VOO", date_range)
+    save_tickers([ticker], date_range)
+    df = get_ticker_df(ticker, date_range)
 
     print(df)
     assert len(df.index) == 20

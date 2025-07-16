@@ -15,7 +15,7 @@ Stooq in any way.
 Add the latest commit to your `requirements.txt`
 
 ```
-pystooq @ git+https://github.com/rreece/pystooq@76c9adb31a5ab7685af411a42ec91e6abc3ce7b9
+pystooq @ git+https://github.com/rreece/pystooq@1d879130f3f70d0e7f22d34216a4a4cb3a29f0a3
 ```
 
 
@@ -27,8 +27,10 @@ to load it again, you can just
 
 ```
 from pystooq.load import get_ticker_df
+ticker = "VOO"
 date_range = ("2022-01-01", "2022-01-31")
-df = get_ticker_df("VOO", date_range)
+save_tickers([ticker], date_range)
+df = get_ticker_df(ticker, date_range)
 ```
 
 The dataframe will look like this:

@@ -7,8 +7,6 @@ import numpy as np
 import os
 import pandas as pd
 
-from pystooq.save import save_tickers
-
 
 PYSTOOQ_DATA_DIR = os.path.join(
         os.environ.get("PYSTOOQ_DATA_DIR", os.environ.get("HOME", "~/")),
@@ -36,8 +34,6 @@ def get_ticker_filename(ticker):
 
 
 def get_ticker_df(ticker, date_range=None, do_save=True):
-    if do_save:
-        save_tickers([ticker], date_range)
     csv_path = get_ticker_filename(ticker)
     df = pd.read_csv(csv_path)
     df["date"] = pd.to_datetime(df["date"], yearfirst=True)
