@@ -16,6 +16,7 @@ setup(
         "numpy>=1.23.0",
         "pandas>=2.0.3",
         "python-dateutil>=2.8.2",
+        "pytest>=7.4.4",
         "pytz>=2023.3",
         "six>=1.16.0",
         "tzdata>=2023.3"
