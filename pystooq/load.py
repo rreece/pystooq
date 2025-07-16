@@ -8,7 +8,9 @@ import os
 import pandas as pd
 
 
-DIR_OF_THIS_FILE = os.path.dirname(os.path.abspath(__file__))
+PYSTOOQ_DATA_DIR = os.path.join(
+        os.environ.get("PYSTOOQ_DATA_DIR", os.environ.get("HOME", "~/")]),
+        ".pystooq")
 
 
 def get_stooq_ticker(ticker):
@@ -26,7 +28,7 @@ def get_stooq_ticker(ticker):
 def get_ticker_filename(ticker):
     stooq_ticker = get_stooq_ticker(ticker)
     csv_path = os.path.join(
-        DIR_OF_THIS_FILE, "daily/%s.csv" % (stooq_ticker)
+        PYSTOOQ_DATA_DIR, "daily/%s.csv" % (stooq_ticker)
     )
     return csv_path
 
