@@ -33,7 +33,9 @@ def get_ticker_filename(ticker):
     return csv_path
 
 
-def get_ticker_df(ticker, date_range=None):
+def get_ticker_df(ticker, date_range=None, do_save=True):
+    if do_save:
+        save_tickers([ticker], date_range)
     csv_path = get_ticker_filename(ticker)
     df = pd.read_csv(csv_path)
     df["date"] = pd.to_datetime(df["date"], yearfirst=True)
