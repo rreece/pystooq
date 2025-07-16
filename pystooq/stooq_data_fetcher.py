@@ -1,11 +1,10 @@
-import typing as t
+"""
+pystooq/pystooq/stooq_data_fetcher.py
+"""
 
-import pandas as pd
 from datetime import date, datetime
-import logging
-from functools import reduce
-
-logger = logging.getLogger(__name__)
+import pandas as pd
+import typing as t
 
 
 class StooqDataFetcher:
@@ -36,14 +35,16 @@ class StooqDataFetcher:
             try:
                 data[ticker] = self._get_data_for_ticker(ticker, start, end)
             except Exception as e:
-                logger.exception(f"Caught exception {e} when fetching data for ticker {ticker} for dates range "
-                                 f"{start.strftime('%Y-%m-%d')} to {end.strftime('%Y-%m-%d')}")
+                print(f"ERROR: Caught exception {e} when fetching data for ticker {ticker} for dates range "
+                      f"{start.strftime('%Y-%m-%d')} to {end.strftime('%Y-%m-%d')}")
 
         for ticker_, data_ in data.items():
             if data_ is None:
                 no_data.append(ticker_)
+
         if no_data:
-            logger.warning(f"No data has been fetched for the following tickers: {', '.join(no_data)}")
+            print(f"ERROR: No data has been fetched for the following tickers: {', '.join(no_data)}")
+
         for ticker in no_data:
             data.pop(ticker)
 
