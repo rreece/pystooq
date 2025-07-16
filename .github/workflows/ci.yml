@@ -6,16 +6,8 @@ name: "CI"
 on:
   push:
     branches: [ "main" ]
-    paths-ignore:
-      - "docs/**"
-      - "notebooks/**"
-      - "stooq/**"
   pull_request:
     branches: [ "main" ]
-    paths-ignore:
-      - "docs/**"
-      - "notebooks/**"
-      - "stooq/**"
 
 permissions:
   contents: read
