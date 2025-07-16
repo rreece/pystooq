@@ -15,7 +15,7 @@ Stooq in any way.
 Add the latest commit to your `requirements.txt`
 
 ```
-pystooq @ git+https://github.com/rreece/pystooq@a2d4567cd79560cfe135a07ce7a037dd0dc03112
+pystooq @ git+https://github.com/rreece/pystooq@a495e865800075d52a4009fadc5d92b039f92880
 ```
 
 
@@ -25,8 +25,9 @@ In order to download Stooq time series of prices for tickers,
 saving the data to csv files so that it doesn't  downloaded if you try
 to load it again, you can just
 
-```
+```python
 from pystooq.load import get_ticker_df
+
 ticker = "VOO"
 date_range = ("2022-01-01", "2022-01-31")
 save_tickers([ticker], date_range)
