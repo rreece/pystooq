@@ -22,14 +22,18 @@ def save_tickers(tickers, date_range, use_cwd=False):
         else:
             filename = get_ticker_filename(ticker)
 
+        start, end = date_range
+
         ## check for existing data before downloading
         if os.path.isfile(filename):
             df1 = pd.read_csv(filename)
             print("Found existing %s with %i entries." % (filename, len(df1.index)))
-            start_date = date.fromisoformat(date_range[0])
-            end_date = date.fromisoformat(date_range[1])
-            first_date = date.fromisoformat(df1["date"].iloc[0])
-            last_date = date.fromisoformat(df1["date"].iloc[-1])
+            start_date = date.fromisoformat(start)
+            end_date = date.fromisoformat(end)
+            first_date_str = df1["date"].iloc[0]
+            last_date_str = df1["date"].iloc[1]
+            first_date = date.fromisoformat(first_date_str)
+            last_date = date.fromisoformat(last_date_str)
             del df1
             assert start_date <= end_date
             if (first_date <= start_date) and (end_date <= last_date):
@@ -39,7 +43,6 @@ def save_tickers(tickers, date_range, use_cwd=False):
                 print("Requested date range (%s, %s) is not within existing data (%s, %s)." % (start_date, end_date, first_date, last_date))
 
         ## fetch data from stooq
-        start, end = date_range
         dfs = __fetch_data([ticker], start, end)
         assert len(dfs) == 1
         stooq_ticker = get_stooq_ticker(ticker)
