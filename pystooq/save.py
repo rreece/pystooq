@@ -31,7 +31,7 @@ def save_tickers(tickers, date_range, use_cwd=False):
             start_date = date.fromisoformat(start)
             end_date = date.fromisoformat(end)
             first_date_str = df1["date"].iloc[0]
-            last_date_str = df1["date"].iloc[1]
+            last_date_str = df1["date"].iloc[-1]
             first_date = date.fromisoformat(first_date_str)
             last_date = date.fromisoformat(last_date_str)
             del df1
