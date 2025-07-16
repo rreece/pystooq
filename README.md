@@ -9,13 +9,15 @@ daily time series stock ticker data from [Stooq](https://stooq.com) website.
 Please note that the authors of this package are not affiliated with 
 Stooq in any way.
 
+
 ## Installation
 
 Add the latest commit to your `requirements.txt`
 
 ```
-pystooq @ git+https://github.com/rreece/pystooq@5a3848bb26dcbe57c753e39482220e9f72d57f69
+pystooq @ git+https://github.com/rreece/pystooq@9e8c1b6601226ab49cebcd64687d53aa9f8618e1
 ```
+
 
 ## Usage
 
