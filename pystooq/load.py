@@ -9,7 +9,7 @@ import pandas as pd
 
 
 PYSTOOQ_DATA_DIR = os.path.join(
-        os.environ.get("PYSTOOQ_DATA_DIR", os.environ.get("HOME", "~/")]),
+        os.environ.get("PYSTOOQ_DATA_DIR", os.environ.get("HOME", "~/")),
         ".pystooq")
 
 
