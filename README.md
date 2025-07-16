@@ -83,3 +83,11 @@ dfs = fetcher.get_data(
 This returns a dataframe like above.
 This does _not_ save the data in csv files.
 
+
+
+Authors
+-------------------------------------------------------------------------------
+
+-   Ryan Reece ([@rreece](https://github.com/rreece))  (Major update, July 2025)
+-   Artur Wegrzyn (Original before fork: [pystooq](https://github.com/wegar-2/pystooq))
+
