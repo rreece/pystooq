@@ -8,9 +8,10 @@ import os
 import pandas as pd
 
 
-PYSTOOQ_DATA_DIR = os.path.join(
-        os.environ.get("PYSTOOQ_DATA_DIR", os.environ.get("HOME", "~/")),
-        ".pystooq")
+PYSTOOQ_DATA_DIR = os.environ.get(
+        "PYSTOOQ_DATA_DIR",
+        os.path.join(os.environ.get("HOME", os.path.expanduser("~")), ".pystooq")
+)
 
 
 def get_stooq_ticker(ticker):

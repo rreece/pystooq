@@ -1,5 +1,18 @@
 """
-Saves stooq data
+Saves stooq data with incremental download optimization.
+
+The save_tickers function intelligently downloads only the missing date ranges:
+- If data already exists and covers the requested range: skip download entirely
+- If data exists but is missing dates at the beginning: download earlier data only
+- If data exists but is missing dates at the end: download newer data only
+- If no data exists: download entire requested range
+
+This significantly reduces download time and server load for daily updates.
+
+Example:
+    Existing data: 2023-12-15 to 2025-12-17
+    Requested:     2024-01-01 to 2025-12-18
+    Downloads:     2025-12-18 only (1 day instead of ~714 days)
 """
 
 
@@ -23,56 +36,107 @@ def save_tickers(tickers, date_range, use_cwd=False):
             filename = get_ticker_filename(ticker)
 
         start, end = date_range
+        start_date = date.fromisoformat(start)
+        end_date = date.fromisoformat(end)
+        assert start_date <= end_date
 
-        ## check for existing data before downloading
+        ## check for existing data and determine what needs to be downloaded
+        ranges_to_download = []
+
         if os.path.isfile(filename):
-            df1 = pd.read_csv(filename)
-            print("Found existing %s with %i entries." % (filename, len(df1.index)))
-            start_date = date.fromisoformat(start)
-            end_date = date.fromisoformat(end)
-            first_date_str = df1["date"].iloc[0]
-            last_date_str = df1["date"].iloc[-1]
+            df_existing = pd.read_csv(filename)
+            print("Found existing %s with %i entries." % (filename, len(df_existing.index)))
+
+            first_date_str = df_existing["date"].iloc[0]
+            last_date_str = df_existing["date"].iloc[-1]
             first_date = date.fromisoformat(first_date_str)
             last_date = date.fromisoformat(last_date_str)
-            del df1
-            assert start_date <= end_date
+
+            # Check if requested range is fully within existing data
             if (first_date <= start_date) and (end_date <= last_date):
-                print("Requested date range (%s, %s) is within existing data (%s, %s)." % (start_date, end_date, first_date, last_date))
+                print("Requested date range (%s, %s) is within existing data (%s, %s). No download needed." % (start_date, end_date, first_date, last_date))
+                del df_existing
                 continue
+
+            # Determine missing ranges
+            # Case 1: Need data before existing data
+            if start_date < first_date:
+                # Download from start_date to day before first_date
+                gap_end = first_date - pd.Timedelta(days=1)
+                # Don't download beyond requested end_date
+                if gap_end > end_date:
+                    gap_end = end_date
+                ranges_to_download.append((start_date, gap_end))
+                print("Need to download earlier data: %s to %s" % (start_date, gap_end))
+
+            # Case 2: Need data after existing data
+            if end_date > last_date:
+                # Download from day after last_date to end_date
+                gap_start = last_date + pd.Timedelta(days=1)
+                # Don't download before requested start_date
+                if gap_start < start_date:
+                    gap_start = start_date
+                ranges_to_download.append((gap_start, end_date))
+                print("Need to download newer data: %s to %s" % (gap_start, end_date))
+
+            del df_existing
+        else:
+            # No existing file, download entire requested range
+            print("No existing data found for %s" % ticker)
+            ranges_to_download.append((start_date, end_date))
+
+        # Download all missing ranges
+        dfs_to_merge = []
+        for download_start, download_end in ranges_to_download:
+            print("Downloading %s data from %s to %s..." % (ticker, download_start, download_end))
+            dfs = __fetch_data([ticker], download_start.isoformat(), download_end.isoformat())
+            assert len(dfs) == 1
+            stooq_ticker = get_stooq_ticker(ticker)
+            df = dfs[stooq_ticker]
+
+            ## check that data isn't empty
+            if len(df.index) == 0:
+                print("WARNING: No data returned for %s in range %s to %s" % (ticker, download_start, download_end))
             else:
-                print("Requested date range (%s, %s) is not within existing data (%s, %s)." % (start_date, end_date, first_date, last_date))
+                print("Downloaded %i entries" % len(df.index))
+                dfs_to_merge.append(df)
 
-        ## fetch data from stooq
-        dfs = __fetch_data([ticker], start, end)
-        assert len(dfs) == 1
-        stooq_ticker = get_stooq_ticker(ticker)
-        df = dfs[stooq_ticker]
+            ## slow down requests between downloads
+            if len(ranges_to_download) > 1:
+                time.sleep(3)
 
-        ## check that data isn't empty
-        assert len(df.index) > 0
+        # If we downloaded any data, merge it with existing file
+        if dfs_to_merge:
+            # Merge all downloaded dataframes
+            if len(dfs_to_merge) > 1:
+                df_new = pd.concat(dfs_to_merge, ignore_index=True)
+            else:
+                df_new = dfs_to_merge[0]
 
-        ## check for existing data and merge
-        if os.path.isfile(filename):
-            df = df.reset_index()
-            df["date"] = pd.to_datetime(df["date"], yearfirst=True)
-            df1 = pd.read_csv(filename)
-            print("Merging with existing %s with %i entries." % (filename, len(df1.index)))
-            df1["date"] = pd.to_datetime(df1["date"], yearfirst=True)
-            df = pd.concat([df, df1], ignore_index=True)
-            df = df.drop_duplicates(subset="date", keep="last")
-            df = df.set_index("date")
-            df = df.sort_index()
-            shutil.copy(filename, filename + ".bak")
+            # Merge with existing file if it exists
+            if os.path.isfile(filename):
+                df_new = df_new.reset_index()
+                df_new["date"] = pd.to_datetime(df_new["date"], yearfirst=True)
+                df_existing = pd.read_csv(filename)
+                print("Merging with existing %s with %i entries." % (filename, len(df_existing.index)))
+                df_existing["date"] = pd.to_datetime(df_existing["date"], yearfirst=True)
+                df = pd.concat([df_new, df_existing], ignore_index=True)
+                df = df.drop_duplicates(subset="date", keep="last")
+                df = df.set_index("date")
+                df = df.sort_index()
+                shutil.copy(filename, filename + ".bak")
+            else:
+                df = df_new
 
-        ## save data
-        print("Saving %s with %i entries." % (filename, len(df.index)))
-        directory = os.path.dirname(filename)
-        if directory and not os.path.exists(directory):
-            os.makedirs(directory)
-        df.to_csv(filename)
+            ## save data
+            print("Saving %s with %i entries." % (filename, len(df.index)))
+            directory = os.path.dirname(filename)
+            if directory and not os.path.exists(directory):
+                os.makedirs(directory)
+            df.to_csv(filename)
 
-        ## slow down requests
-        time.sleep(10)
+        ## slow down requests between tickers
+        time.sleep(3)
 
 
 def __fetch_data(tickers, start, end):
