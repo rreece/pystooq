@@ -90,8 +90,12 @@ def save_tickers(tickers, date_range, use_cwd=False):
         for download_start, download_end in ranges_to_download:
             print("Downloading %s data from %s to %s..." % (ticker, download_start, download_end))
             dfs = __fetch_data([ticker], download_start.isoformat(), download_end.isoformat())
-            assert len(dfs) == 1
             stooq_ticker = get_stooq_ticker(ticker)
+
+            if len(dfs) == 0 or stooq_ticker not in dfs:
+                print("WARNING: No data fetched for %s in range %s to %s (likely market holiday/closure)")
+                continue
+
             df = dfs[stooq_ticker]
 
             ## check that data isn't empty
