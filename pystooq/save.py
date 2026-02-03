@@ -113,7 +113,7 @@ def save_tickers(tickers, date_range, use_cwd=False):
         if dfs_to_merge:
             # Merge all downloaded dataframes
             if len(dfs_to_merge) > 1:
-                df_new = pd.concat(dfs_to_merge, ignore_index=True)
+                df_new = pd.concat(dfs_to_merge)
             else:
                 df_new = dfs_to_merge[0]
 
