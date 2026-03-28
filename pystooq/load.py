@@ -19,7 +19,7 @@ def get_stooq_ticker(ticker):
         "BTC": "BTC.V",
         "ETH": "ETH.V",
         "1YUSP": "1YUSP.B",
-        "2YUSP": "2YUSp.B",
+        "2YUSP": "2YUSP.B",
         "5YUSP": "5YUSP.B",
         "10YUSP": "10YUSP.B",
         "3MUSY": "3MUSY.B",
