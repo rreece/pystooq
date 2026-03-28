@@ -18,6 +18,15 @@ def get_stooq_ticker(ticker):
     ticker_map = {
         "BTC": "BTC.V",
         "ETH": "ETH.V",
+        "1YUSP": "1YUSP.B",
+        "2YUSP": "2YUSp.B",
+        "5YUSP": "5YUSP.B",
+        "10YUSP": "10YUSP.B",
+        "3MUSY": "3MUSY.B",
+        "1YUSY": "1YUSY.B",
+        "2YUSY": "2YUSY.B",
+        "5YUSY": "5YUSY.B",
+        "10YUSY": "10YUSY.B",
     }
     stooq_ticker = ticker_map.get(ticker)
     if stooq_ticker is None:
