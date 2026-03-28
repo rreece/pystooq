@@ -52,6 +52,9 @@ fi
 
 export PROJECT_PATH=${path_of_this_dir}
 
+# Set pystooq data dir
+export PYSTOOQ_DATA_DIR=${PROJECT_PATH}/data
+
 #add_to_path ${path_of_this_dir}/scripts
 #add_to_python_path ${path_of_this_dir}/python
 
