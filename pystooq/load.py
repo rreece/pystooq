@@ -1,5 +1,6 @@
 """
 Loads and cleans stooq data
+foo
 """
 
 
